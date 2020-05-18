@@ -1,0 +1,57 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: istiocontrolplane-default
+  tag: 1.5.2
+  namespace: istio-operator
+spec:
+  profile: default
+  components:
+    ingressGateways:
+      - name: istio-ingressgateway
+        enabled: false
+      - name: istio-ilbgateway
+        enabled: true
+        k8s:
+          serviceAnnotations:
+            cloud.google.com/load-balancer-type: "internal"
+            networking.gke.io/internal-load-balancer-allow-global-access: "true"
+          service:
+            ports:
+            - name: http2
+              port: 80
+              protocol: TCP
+            - name: https
+              port: 443
+              protocol: TCP
+            - name: tls
+              port: 15443
+              targetPort: 15443
+              protocol: TCP  
+          overlays:
+          - apiVersion: v1
+            kind: Service
+            name: istio-ilbgateway
+            patches:
+            - path: spec.loadBalancerSourceRanges
+              value:
+              # VPC Network Cluster2        
+              - "172.21.0.0/20"
+              # Pod address range Cluster2   
+              - "10.16.48.0/20"       
+  addonComponents:
+    istiocoredns:
+      enabled: true   
+  values:
+    global:
+      controlPlaneSecurityEnabled: true
+      mtls:
+        enabled: true
+      pilotCertProvider: kubernetes
+      podDNSSearchNamespaces:
+      - global
+      - '{{ valueOrDefault .DeploymentMeta.Namespace "default" }}.global'
+    prometheus:
+      enabled: false
+    security:
+      selfSigned: false
