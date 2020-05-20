@@ -3,6 +3,9 @@
 set -euo pipefail
 source ./env.sh
 
+# Enable IAP Api
+
+gcloud services enable iam.googleapis.com
 
 # Create Jump-host VM with no external ip
 
