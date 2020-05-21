@@ -5,17 +5,17 @@
 
 This demo shows you how to build a private multicluster service mesh solution, with Istio 1.5 and Service Mesh Hub for mesh Federation. This is achieved by using an Internal Load Balancer (ILB) to connect Istio workloads running in multi-region Private Google Kubernetes Engine (GKE) clusters.
 
-#
+
 
 ## Implementation Architecture
 
-<br/>
 In this demo, we will build the following architecture:
 
 ![arch-diagram](resources/images/ilb_multicluster_Istio.png)
 
 
 ## Prerequisites
+
 
 - A GCP project with billing enabled
 - gcloud CLI
@@ -29,7 +29,6 @@ In this demo, we will build the following architecture:
 ❯ export PROJECT_ID=<your-project-id>
 ```
 
-<br/>
 <br/>
 
 ### 1. Create a custom VPC network with 2 subnets in different regions:
